@@ -85,7 +85,7 @@ function Form() {
             )}
           </Flex>
 
-          {/* <Footer mt={10} onAbout={aboutModalDisclosure.onOpen} />
+          {/* <Footer mt={10} onAbout={aboutModalDisclosure.onOpen} /> */}
 
           <FoodsDrawer
             isOpen={foodsDrawerDisclosure.isOpen}
@@ -94,7 +94,7 @@ function Form() {
             onSelectedFoods={dietFormEvents.onMealAdded}
           />
 
-          <About
+          {/* <About
             isOpen={aboutModalDisclosure.isOpen}
             onClose={aboutModalDisclosure.onClose}
           /> */}
