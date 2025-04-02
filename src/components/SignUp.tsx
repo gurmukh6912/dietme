@@ -131,7 +131,7 @@ export const SignUp = () => {
             bgGradient="linear(to-r, teal.500, green.500)"
             bgClip="text"
           >
-            Create Account
+            Create New Account
           </Heading>
 
           <Text fontSize="lg" color="gray.600" textAlign="center">
