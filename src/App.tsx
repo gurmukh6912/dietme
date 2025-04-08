@@ -53,7 +53,7 @@ const ProtectedRoute = ({ component: Component, ...rest }: ProtectedRouteProps) 
 
 const AppContent = () => {
   return (
-    <Router basename="/dietme">
+    <Router basename="/">
       <Switch>
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={SignUp} />

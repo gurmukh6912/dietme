@@ -6,7 +6,7 @@ import { comlink } from 'vite-plugin-comlink'
 
 export default defineConfig({
 	// base path for the application
-	base: '/dietme',
+	base: '/',
 	plugins: [react(), viteTsconfigPaths({
 
 	}), comlink()],
