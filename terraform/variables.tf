@@ -44,4 +44,9 @@ variable "docdb_instance_class" {
   description = "Instance class for DocumentDB"
   type        = string
   default     = "db.t3.medium"
+}
+
+variable "github_repo" {
+  description = "GitHub repository name in format: organization/repository"
+  type        = string
 } 

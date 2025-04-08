@@ -189,6 +189,67 @@ resource "aws_iam_role_policy" "cloudwatch" {
   })
 }
 
+# IAM Role for GitHub Actions
+resource "aws_iam_role" "github_actions" {
+  name = "${var.project_name}-${var.environment}-github-actions"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Effect = "Allow"
+        Principal = {
+          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
+        }
+        Condition = {
+          StringLike = {
+            "token.actions.githubusercontent.com:sub": "repo:${var.github_repo}:*"
+          }
+          StringEquals = {
+            "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+          }
+        }
+      }
+    ]
+  })
+}
+
+# IAM Policy for GitHub Actions
+resource "aws_iam_role_policy" "github_actions" {
+  name = "${var.project_name}-${var.environment}-github-actions"
+  role = aws_iam_role.github_actions.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:DeleteObject"
+        ]
+        Resource = [
+          aws_s3_bucket.website.arn,
+          "${aws_s3_bucket.website.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
+# OIDC Provider for GitHub Actions
+resource "aws_iam_openid_connect_provider" "github_actions" {
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+}
+
+# Get current AWS account ID
+data "aws_caller_identity" "current" {}
+
 output "cognito_user_pool_id" {
   value       = aws_cognito_user_pool.main.id
   description = "The ID of the Cognito User Pool"
@@ -356,4 +417,10 @@ output "documentdb_reader_endpoint" {
 output "documentdb_port" {
   value       = aws_docdb_cluster.main.port
   description = "The port of the DocumentDB cluster"
+}
+
+# Output the role ARN
+output "github_actions_role_arn" {
+  value       = aws_iam_role.github_actions.arn
+  description = "The ARN of the IAM role for GitHub Actions"
 }
